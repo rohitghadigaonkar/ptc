@@ -1,0 +1,5 @@
+---
+- hosts: ptc
+  tasks:
+  - name: starting mysql service
+    service: name=mysql state=started

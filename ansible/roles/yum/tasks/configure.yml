@@ -1,0 +1,8 @@
+---
+- name: Tonu.Repo
+  copy: src=Tonu.repo dest=/etc/yum.repos.d/Tonu.repo
+
+- name: CentOS-Base.repo
+  copy: src=CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo
+
+...

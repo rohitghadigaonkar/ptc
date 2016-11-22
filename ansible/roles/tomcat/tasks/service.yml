@@ -1,0 +1,9 @@
+---
+#start tomcat service
+- hosts: ptc
+  tasks:
+  - name: starting tomcat service
+    service: name=tomcat71 state=started
+
+  - name: starting tomcat service
+    service: name=tomcat72 state=started

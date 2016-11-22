@@ -1,0 +1,98 @@
+---
+- hosts: ptc
+  vars:
+    - dest_tomcat7: /opt/tomcat
+  tasks:
+#Creating initial directory and installing tomcat package
+#  - name: Create directory for tomcat
+#    command: mkdir -p /opt/tomcat/tomcat71
+#    command: mkdir -p /opt/tomcat/tomcat72
+
+  - name: Cloning repos
+#    git: repo=git@github.com:rohitghadigaonkar/ptc.git
+    git: repo=https://github.com/rohitghadigaonkar/ptc.git
+         dest={{ item.dest }}
+         accept_hostkey=yes
+         force=yes
+         recursive=no
+    with_items:
+     -
+      dest: "{{ dest_tomcat7 }}"
+
+#Creating initial directory and installing tomcat package
+  - name: Create directory for tomcat71
+    command: mkdir -p /opt/tomcat/tomcat71
+
+  - name: Create directory for tomcat72
+    command: mkdir -p /opt/tomcat/tomcat72
+
+  - name: Copy Tomcat Tar to Tomcat71
+    command: cp -av /opt/tomcat/tomcat7.tar.gz /opt/tomcat/tomcat71/
+
+  - name: Copy Tomcat Tar to Tomcat72
+    command: cp -av /opt/tomcat/tomcat7.tar.gz /opt/tomcat/tomcat72/
+
+
+  - name: Extract Tomcat71
+    command: tar xzf /opt/tomcat/tomcat71/tomcat7.tar.gz -C /opt/tomcat/tomcat71/ --strip-components 1
+
+
+  - name: Extract Tomcat72
+    command: tar xzf /opt/tomcat/tomcat72/tomcat7.tar.gz -C /opt/tomcat/tomcat72/ --strip-components 1
+
+  - name: Changing Tomcat Listening Port
+    command: sed -i -e 's/8080/8081/g' /opt/tomcat/tomcat72/conf/server.xml
+
+  - name: Changing Tomcat Listening Port
+    command: sed -i -e 's/8005/8006/g' /opt/tomcat/tomcat72/conf/server.xml
+
+  - name: Changing Tomcat Listening Port
+    command: sed -i -e 's/8009/8010/g' /opt/tomcat/tomcat72/conf/server.xml
+
+  - name: Creating Logs directory
+    file: path=/opt/tomcat/tomcat71/logs state=directory
+
+  - name: Creating Logs directory
+    file: path=/opt/tomcat/tomcat72/logs state=directory
+
+  - name: add group "tomcat"
+    group: name=tomcat
+
+  - name: add user "tomcat"
+    user: name=tomcat group=tomcat home=/opt/tomcat createhome=no
+    become: True
+
+  - name: Downloading Java download script
+    copy: src=/etc/ansible/roles/tomcat/files/get-java.sh dest=/opt/tomcat/get-java.sh mode=0755
+
+#  - name: Setting directory for downloading java
+#    command: chdir /opt/tomcat
+
+  - name: Downloading Java via script
+    command: sh /opt/tomcat/get-java.sh
+
+#  - name: Downloading Java
+#    command: chdir /opt/tomcat
+#    command: wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.tar.gz
+
+#  - name: Setting directory for extracting java
+#    command: chdir /opt/tomcat
+
+#  - name: Extracting Java Archive
+#    command: tar -xzf jdk*tar.gz*
+
+#  - name: Renaming Java Directory
+#    command: mv jdk1* jdk7
+
+#  - name: Removing Java source
+#    command: rm -rf jdk*tar.gz*
+
+  
+  - name: Install Tomcat71 init script
+    copy: src=/etc/ansible/roles/tomcat/files/tomcat-init-71.sh dest=/etc/init.d/tomcat71 mode=0755
+
+  - name: Install Tomcat72 init script
+    copy: src=/etc/ansible/roles/tomcat/files/tomcat-init-72.sh dest=/etc/init.d/tomcat72 mode=0755
+
+  - name: change ownership for tomcat directory to user 'tomcat'
+    file: dest=/opt/tomcat owner=tomcat group=tomcat mode=754 recurse=yes

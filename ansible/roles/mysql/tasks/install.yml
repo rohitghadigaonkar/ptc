@@ -1,0 +1,23 @@
+---
+- hosts: ptc
+  tasks:
+#installing mysql package
+  - name: Install MySQL packages
+    apt: pkg={{item}} state=installed
+    with_items:
+      - python-mysqldb
+      - mysql-server-5.6
+
+#- name: Remove the MySQL test database
+#  action: mysql_db db=test state=absent
+
+#- name: Set root password
+#  mysql_user: name=root password={{password}} host="{{item}}" priv=*.*:ALL,GRANT state=present
+#  with_items:
+#    - "{{password123}}"
+#    - 127.0.0.1
+#    - ::1
+#    - localhost
+#
+#- name: Restart the MySQL service
+#  action: service name=mysql state=restarted enabled=true

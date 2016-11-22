@@ -1,0 +1,12 @@
+---
+- hosts: ptc
+  tasks:
+#installing httpd package
+  - name: install apache
+    apt: pkg={{ item }} state=present
+    with_items:
+        - apache2
+
+#start apache service
+  - name: starting apache service
+    action: service name=apache2 state=started enabled=true

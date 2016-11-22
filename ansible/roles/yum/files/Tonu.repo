@@ -1,0 +1,7 @@
+#Coming From Ansible Role
+[centos-local]
+name=CentOS_LOCAL_REPOSITORY
+baseurl=http://172.28.51.176/centos/
+enabled=1
+gpgcheck=1
+gpgkey=http://172.28.51.176/centos/RPM-GPG-KEY-CentOS-6

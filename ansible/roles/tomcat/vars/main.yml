@@ -1,0 +1,4 @@
+---
+# vars file for tomcat
+
+dest_tomcat7: /opt/tomcat

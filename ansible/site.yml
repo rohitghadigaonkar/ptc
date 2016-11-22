@@ -1,0 +1,6 @@
+---
+ - hosts: ptc
+   roles:
+#     - yum
+     - apache
+#     - tomcat

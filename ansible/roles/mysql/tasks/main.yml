@@ -1,0 +1,4 @@
+---
+# tasks file for mysql
+- include: install.yml
+- include: service.yml
